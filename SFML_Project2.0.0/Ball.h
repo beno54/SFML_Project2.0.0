@@ -30,6 +30,7 @@ public:
 	void Ball::setX_dir(int);
 	void Ball::setY_dir(int);
 	void Ball::setE_distance(int);
+	void Ball::setFillColor(sf::Color);
 
 	void Ball::inverseX();
 	void Ball::inverseY();

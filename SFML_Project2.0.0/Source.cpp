@@ -3,14 +3,15 @@
 #include <iostream>
 #include "Ball.h"
 
-int NB_SHAPE= 1;
+#define NB_SHAPE_TOT  100
+int NB_SHAPE= 0;
 #define SCREEN_HIGH 1080
 #define SCREEN_LENGTH 1920
 #define SHAPE_RADIUS 10
 #define VITESSE 3
 
 void Coordonne_ligne(Ball*, int i);
-void init_shape(Ball*);
+void init_shape(Ball*, sf::Vector2i );
 
 void Detection_bord(Ball*);
 
@@ -20,17 +21,18 @@ int main()
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
 	int i = 0, e = 0;
-
+	bool Position_free = true;
 	//Encodage de NB_SHAPE
-	printf("Nombre de balles a generer: ");
-	scanf_s("%d", &NB_SHAPE);
-	printf("\n\n ");
+	//printf("Nombre de balles a generer: ");
+	//scanf_s("%d", &NB_SHAPE);
+	//printf("\n\n ");
 
 	//réservation de la place mémoire pour les balles . Attention l'initalisation (appel constructeur) pour chaque balle se fait dans la fonction init
-	Ball * corps = (Ball*)malloc(sizeof(Ball)*NB_SHAPE);
+	Ball * corps;
+	corps = new Ball[NB_SHAPE_TOT];
 
 	////initialisation des rond et leurs données de trajectoire
-	init_shape(corps);
+	
 
 	//lancement de la fenêtre
 	while (window.isOpen())
@@ -43,6 +45,22 @@ int main()
 		}
 
 		window.clear();
+
+		Position_free = true;
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			sf::Vector2i localPosition = sf::Mouse::getPosition(window);
+			for (int i = 0; i < NB_SHAPE; i++)
+			{
+				double distance = sqrt(pow(corps[i].getPosition().x - localPosition.x, 2) + pow(corps[i].getPosition().y - localPosition.y, 2));
+				if (distance <= (2 * SHAPE_RADIUS))
+				{
+					Position_free = false;
+				}
+			}
+			// le bouton gauche est enfoncé : on crée
+			if (Position_free == true)init_shape(corps, localPosition);
+		}
 
 		////on dessine les ronds et les lignes
 		for (i = 0; i < NB_SHAPE; i++)
@@ -77,38 +95,21 @@ int main()
 	}
 
 	//suppression du tableau de balle
-	for (int i = 0; i < NB_SHAPE; i++)
-	{
-		(corps + i)->~Ball();
-	}
-	free(corps);
+	delete[] corps;
 	// fin de suppresion
 
 	return 0;
 }
 
-void init_shape(Ball *shape)
+void init_shape(Ball *shape, sf::Vector2i localPosition)
 {
-	// on, génère la position des balles
-	int a = 0, e = 0;
-	for (int i = 0; i < NB_SHAPE; i++)
+	if (NB_SHAPE != NB_SHAPE_TOT )
 	{
-		//appel du constructeur de base pour chaques balles
-		new (shape + i)Ball(i);
+		shape[NB_SHAPE].setFillColor(sf::Color(localPosition.y % 255, localPosition.x % 255, (localPosition.y + localPosition.x) % 255));
+		shape[NB_SHAPE].setPosition(sf::Vector2f(localPosition));
+		shape[NB_SHAPE].setRadius(SHAPE_RADIUS);
 
-		//mise en memoire des données voulue
-		if (a + a * 4 * SHAPE_RADIUS > SCREEN_LENGTH)
-		{
-			e++;
-			a = 0;
-		}
-
-		float x = float(SHAPE_RADIUS + a * 4 * SHAPE_RADIUS);
-		float y = float(SHAPE_RADIUS + e * 4 * SHAPE_RADIUS);
-
-		shape[i].setPosition(sf::Vector2f(x, y));
-		shape[i].setRadius(SHAPE_RADIUS);
-		a+=2;
+		NB_SHAPE++;
 	}
 
 

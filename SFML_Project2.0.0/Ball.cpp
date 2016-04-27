@@ -89,3 +89,8 @@ void Ball::Description()const
 {
 	printf("Balle %d", i_indice);
 }
+
+void Ball::setFillColor(sf::Color color)
+{
+	shape.setFillColor(color);
+}
