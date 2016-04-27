@@ -6,19 +6,21 @@ using namespace std;
 
 class Ball
 {
+
 public:
 	// Constructeurs
 	Ball(int x_dir, int y_dir, int radius, int i_indice);
 	Ball(int radius, int i_indice);
 	Ball(int i_indice);
 	Ball();
-
+	~Ball();
 	//fonction
 	sf::Vector2f Ball::getPosition() ;
 
 	void Ball::setRadius(int var);
 	void Ball::setPosition(sf::Vector2f);
 	void Ball::move(int);
+	void Ball::move(int , double , double );
 
 	sf::CircleShape Ball::getShape();
 
@@ -37,9 +39,17 @@ public:
 
 	void Ball::Description()const;
 
+	static int Ball::nombreInstances();
+	static void  Ball::ResetInstances();
+	static void  Ball::SetInstances();
+
+
+
 private:
 	int x_dir, y_dir, radius, e_distance, i_indice;
 	sf::CircleShape shape;
+	static int compteur;
+
 };
 
 #endif
