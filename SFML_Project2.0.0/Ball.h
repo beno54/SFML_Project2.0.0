@@ -18,6 +18,7 @@ public:
 	sf::Vector2f Ball::getPosition() ;
 
 	void Ball::setRadius(int var);
+	int Ball::getRadius();
 	void Ball::setPosition(sf::Vector2f);
 	void Ball::move(int);
 	void Ball::move(int , double , double );
@@ -42,8 +43,9 @@ public:
 	static int Ball::nombreInstances();
 	static void  Ball::ResetInstances();
 	static void  Ball::SetInstances();
+	static void  Ball::UnsetInstances();
 
-
+	void Ball::Initialise(sf::Vector2i, int, int);
 
 private:
 	int x_dir, y_dir, radius, e_distance, i_indice;
